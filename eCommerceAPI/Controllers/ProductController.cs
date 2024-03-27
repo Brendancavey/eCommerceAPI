@@ -34,6 +34,14 @@ namespace eCommerceAPI.Controllers
             byte[] imgData = product.img;
             return File(imgData, "image/jpg");
         }
+        [HttpGet]
+        [Route("get-image-by-id2/{productId}")]
+        public async Task<IActionResult> GetImage2(int productId)
+        {
+            var product = await _productService.Get(productId);
+            byte[] imgData = product.img2;
+            return File(imgData, "image/jpg");
+        }
         [HttpPost]
         [Route("addProduct")]
         public async Task<IActionResult> AddProduct(IFormFile file0, IFormFile file1, [FromForm] Product newProduct)
@@ -42,7 +50,9 @@ namespace eCommerceAPI.Controllers
             {
                 await file0.CopyToAsync(memoryStream);
                 newProduct.img = memoryStream.ToArray();
-
+            }
+            using (var memoryStream = new MemoryStream())
+            {
                 await file1.CopyToAsync(memoryStream);
                 newProduct.img2 = memoryStream.ToArray();
             }
