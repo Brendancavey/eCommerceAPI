@@ -27,9 +27,17 @@ namespace eCommerceAPI.Controllers
         }
         [HttpPost]
         [Route("addProduct")]
-        public async Task<IActionResult> AddProduct(Product newProduct)
+        public async Task<IActionResult> AddProduct(IFormFile file0, IFormFile file1, [FromForm] Product newProduct)
         {
-            return Ok(await _productService.AddProduct(newProduct));
+            using (var memoryStream = new MemoryStream())
+            {
+                file0.CopyToAsync(memoryStream);
+                newProduct.img = memoryStream.ToArray();
+
+                file1.CopyToAsync(memoryStream);
+                newProduct.img2 = memoryStream.ToArray();
+            }
+                return Ok(await _productService.AddProduct(newProduct));
         }
         [HttpPut]
         [Route("updateProduct")]
