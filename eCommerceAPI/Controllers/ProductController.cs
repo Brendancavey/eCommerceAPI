@@ -65,7 +65,7 @@ namespace eCommerceAPI.Controllers
             return Ok(await _productService.UpdateProduct(updatedProduct));
         }
         [HttpDelete]
-        [Route("deleteProduct")]
+        [Route("deleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             return Ok(await _productService.DeleteProduct(id));
