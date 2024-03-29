@@ -60,8 +60,18 @@ namespace eCommerceAPI.Controllers
         }
         [HttpPut]
         [Route("updateProduct")]
-        public async Task<IActionResult> UpdateProduct(Product updatedProduct) 
-        { 
+        public async Task<IActionResult> UpdateProduct(IFormFile file0, IFormFile file1, [FromForm] Product updatedProduct) 
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await file0.CopyToAsync(memoryStream);
+                updatedProduct.img = memoryStream.ToArray();
+            }
+            using (var memoryStream = new MemoryStream())
+            {
+                await file1.CopyToAsync(memoryStream);
+                updatedProduct.img2 = memoryStream.ToArray();
+            }
             return Ok(await _productService.UpdateProduct(updatedProduct));
         }
         [HttpDelete]
