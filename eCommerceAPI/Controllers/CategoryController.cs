@@ -28,7 +28,7 @@ namespace eCommerceAPI.Controllers
         }
         [HttpPost]
         [Route("addCategory")]
-        public async Task<IActionResult> AddCategory(Category newCategory)
+        public async Task<IActionResult> AddCategory([FromForm] Category newCategory)
         {
             return Ok(await _categoryService.AddCategory(newCategory));
         }
