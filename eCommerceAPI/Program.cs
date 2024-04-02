@@ -16,7 +16,8 @@ builder.Services.AddCors(c =>
     c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddDbContext<DbContext, ProductListDBContext>(options =>
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddDbContext<DbContext, EcommerceDBContext>(options =>
 {
     options.UseSqlServer(
         "Server=DESKTOP-5D2A9FB;" +

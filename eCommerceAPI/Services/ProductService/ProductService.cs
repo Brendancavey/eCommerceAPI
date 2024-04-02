@@ -7,8 +7,8 @@ namespace eCommerceAPI.Services.ProductService
 {
     public class ProductService : IProductService
     {
-        private readonly ProductListDBContext _context;
-        public ProductService(ProductListDBContext context) 
+        private readonly EcommerceDBContext _context;
+        public ProductService(EcommerceDBContext context) 
         { 
             _context = context;
         }

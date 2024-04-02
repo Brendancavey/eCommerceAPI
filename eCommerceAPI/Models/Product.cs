@@ -1,4 +1,6 @@
-﻿namespace eCommerceAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace eCommerceAPI.Models
 {
     public class Product
     {
@@ -10,5 +12,9 @@
         public bool isNew { get; set; }
         public int price { get; set; }
         public int salePrice { get; set; }
+
+
+        //navigation properties
+        public ICollection<Category>? Categories { get; set; }
     }
 }
