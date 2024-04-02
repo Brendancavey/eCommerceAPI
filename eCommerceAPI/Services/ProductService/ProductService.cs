@@ -21,8 +21,12 @@ namespace eCommerceAPI.Services.ProductService
         {
             return await _context.Products.FindAsync(id);
         }
-        public async Task<Product> AddProduct(Product newProduct)
+        public async Task<Product> AddProduct(Product newProduct, int[]? selectedCategoryIds)
         {
+            var selectedCategories = _context.Categories
+                .Where(c => selectedCategoryIds.Contains(c.Id))
+                .ToList();
+            newProduct.Categories = selectedCategories;
             _context.Add(newProduct);
             await _context.SaveChangesAsync();
             return newProduct;

@@ -1,4 +1,5 @@
-﻿using eCommerceAPI.Models;
+﻿using eCommerceAPI.DBContext;
+using eCommerceAPI.Models;
 using eCommerceAPI.Services.ProductService;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -44,8 +45,16 @@ namespace eCommerceAPI.Controllers
         }
         [HttpPost]
         [Route("addProduct")]
-        public async Task<IActionResult> AddProduct(IFormFile file0, IFormFile file1, [FromForm] Product newProduct)
+        public async Task<IActionResult> AddProduct(IFormFile file0, IFormFile file1, [FromForm] ProductViewModel productModel)
         {
+            var newProduct = new Product()
+            {
+                title = productModel.title,
+                description = productModel.description,
+                isNew = productModel.isNew,
+                price = productModel.price,
+                salePrice = productModel.salePrice,
+            };
             using (var memoryStream = new MemoryStream())
             {
                 await file0.CopyToAsync(memoryStream);
@@ -56,7 +65,7 @@ namespace eCommerceAPI.Controllers
                 await file1.CopyToAsync(memoryStream);
                 newProduct.img2 = memoryStream.ToArray();
             }
-                return Ok(await _productService.AddProduct(newProduct));
+            return Ok(await _productService.AddProduct(newProduct, productModel.SelectedCategoryIds));
         }
         [HttpPut]
         [Route("updateProduct")]
