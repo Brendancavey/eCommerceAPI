@@ -22,6 +22,12 @@ namespace eCommerceAPI.Controllers
             return Ok(await _productService.GetAll());
         }
         [HttpGet]
+        [Route("get-products-by-categories")]
+        public async Task<IActionResult> GetProductsByCategories([FromQuery] int[] selectedCategoryIds)
+        {
+            return Ok(await _productService.GetProductsByCategories(selectedCategoryIds));
+        }
+        [HttpGet]
         [Route("get-by-id/{id}")]
         public async Task<IActionResult> Get(int id)
         {

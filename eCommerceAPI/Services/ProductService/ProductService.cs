@@ -17,6 +17,13 @@ namespace eCommerceAPI.Services.ProductService
             var products = await _context.Products.ToListAsync();
             return products;
         }
+        public async Task<IEnumerable<Product>> GetProductsByCategories(int[] categoryIds)
+        {
+            var products = await _context.Products
+                .Where(p => p.Categories.Any(c => categoryIds.Contains(c.Id)))
+                .ToListAsync();
+            return products;
+        }
         public async Task<Product> Get(int id)
         {
             return await _context.Products.FindAsync(id);
