@@ -24,6 +24,13 @@ namespace eCommerceAPI.Services.ProductService
                 .ToListAsync();
             return products;
         }
+        public async Task<IEnumerable<Product>> GetProductsByPrice(int filterPrice)
+        {
+            var products = await _context.Products
+                .Where(p => p.salePrice <= filterPrice)
+                .ToListAsync();
+            return products;
+        }
         public async Task<Product> Get(int id)
         {
             return await _context.Products.FindAsync(id);
