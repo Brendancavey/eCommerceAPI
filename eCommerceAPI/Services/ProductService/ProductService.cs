@@ -17,6 +17,21 @@ namespace eCommerceAPI.Services.ProductService
             var products = await _context.Products.ToListAsync();
             return products;
         }
+        public async Task<IEnumerable<Product>> GetProductsByFilters(int[] categoryIds, int filterPrice)
+        {
+            if(categoryIds.Length > 0)
+            {
+                var productsByCategories = await GetProductsByCategories(categoryIds);
+                var productsByPrice = await GetProductsByPrice(filterPrice);
+                var filteredProducts = productsByCategories.Intersect(productsByPrice);
+                return filteredProducts;
+            }
+            else
+            {
+                var filteredProducts = await GetProductsByPrice(filterPrice);
+                return filteredProducts;
+            }
+        }
         public async Task<IEnumerable<Product>> GetProductsByCategories(int[] categoryIds)
         {
             var products = await _context.Products

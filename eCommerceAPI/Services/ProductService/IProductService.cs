@@ -6,6 +6,7 @@ namespace eCommerceAPI.Services.ProductService
     public interface IProductService
     {
         public Task<IEnumerable<Product>> GetAll();
+        public Task<IEnumerable<Product>> GetProductsByFilters(int[] categoryIds, int filterPrice);
         public Task<IEnumerable<Product>> GetProductsByCategories(int[] categoryIds);
         public Task<IEnumerable<Product>> GetProductsByPrice(int filterPrice);
         public Task<Product> Get(int id);
