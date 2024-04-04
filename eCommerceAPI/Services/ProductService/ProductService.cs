@@ -17,20 +17,16 @@ namespace eCommerceAPI.Services.ProductService
             var products = await _context.Products.ToListAsync();
             return products;
         }
-        public async Task<IEnumerable<Product>> GetProductsByFilters(int[] categoryIds, int filterPrice)
+        public async Task<IEnumerable<Product>> GetProductsByFilters(int[] categoryIds, int filterPrice, string sortOrder)
         {
+            var filteredProducts = await GetProductsByPrice(filterPrice);
             if(categoryIds.Length > 0)
             {
                 var productsByCategories = await GetProductsByCategories(categoryIds);
-                var productsByPrice = await GetProductsByPrice(filterPrice);
-                var filteredProducts = productsByCategories.Intersect(productsByPrice);
-                return filteredProducts;
+                filteredProducts = filteredProducts.Intersect(productsByCategories);
             }
-            else
-            {
-                var filteredProducts = await GetProductsByPrice(filterPrice);
-                return filteredProducts;
-            }
+            filteredProducts = GetProductsPriceSorted(filteredProducts, sortOrder);
+            return filteredProducts;
         }
         public async Task<IEnumerable<Product>> GetProductsByCategories(int[] categoryIds)
         {
@@ -44,6 +40,18 @@ namespace eCommerceAPI.Services.ProductService
             var products = await _context.Products
                 .Where(p => p.salePrice <= filterPrice)
                 .ToListAsync();
+            return products;
+        }
+        public IEnumerable<Product> GetProductsPriceSorted(IEnumerable<Product> products, string sortOrder) //sort order is desc or asc by price
+        {
+            if (sortOrder == "desc")
+            {
+                products = products.OrderByDescending(p => p.salePrice);
+            }
+            else if(sortOrder == "asc")
+            {
+                products = products.OrderBy(p => p.salePrice);
+            }
             return products;
         }
         public async Task<Product> Get(int id)

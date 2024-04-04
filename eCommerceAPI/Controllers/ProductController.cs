@@ -23,9 +23,9 @@ namespace eCommerceAPI.Controllers
         }
         [HttpGet]
         [Route("get-products-by-filters")]
-        public async Task<IActionResult> GetProductsByFilters([FromQuery] int[] selectedCategoryIds, int filterPrice)
+        public async Task<IActionResult> GetProductsByFilters([FromQuery] int[] selectedCategoryIds, int filterPrice, string sortOrder="asc")
         {
-            return Ok(await _productService.GetProductsByFilters(selectedCategoryIds, filterPrice));
+            return Ok(await _productService.GetProductsByFilters(selectedCategoryIds, filterPrice, sortOrder));
         }
         [HttpGet]
         [Route("get-products-by-categories")]
