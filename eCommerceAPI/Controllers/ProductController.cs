@@ -63,7 +63,7 @@ namespace eCommerceAPI.Controllers
         }
         [HttpPost]
         [Route("addProduct")]
-        public async Task<IActionResult> AddProduct(IFormFile file0, IFormFile file1, [FromForm] ProductViewModel productModel)
+        public async Task<IActionResult> AddProduct([FromForm] ProductViewModel productModel, IFormFile file0, IFormFile file1 = null)
         {
             var newProduct = new Product()
             {
@@ -73,33 +73,51 @@ namespace eCommerceAPI.Controllers
                 price = productModel.price,
                 salePrice = productModel.salePrice,
             };
-            using (var memoryStream = new MemoryStream())
+            if (file0 != null)
             {
-                await file0.CopyToAsync(memoryStream);
-                newProduct.img = memoryStream.ToArray();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file0.CopyToAsync(memoryStream);
+                    newProduct.img = memoryStream.ToArray();
+                }
             }
-            using (var memoryStream = new MemoryStream())
+            if (file1 != null)
             {
-                await file1.CopyToAsync(memoryStream);
-                newProduct.img2 = memoryStream.ToArray();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file1.CopyToAsync(memoryStream);
+                    newProduct.img2 = memoryStream.ToArray();
+                }
             }
             return Ok(await _productService.AddProduct(newProduct, productModel.SelectedCategoryIds));
         }
         [HttpPut]
         [Route("updateProduct")]
-        public async Task<IActionResult> UpdateProduct(IFormFile file0, IFormFile file1, [FromForm] Product updatedProduct) 
+        public async Task<IActionResult> UpdateProduct([FromForm] Product updatedProduct, IFormFile file0 = null, IFormFile file1 = null) 
         {
-            using (var memoryStream = new MemoryStream())
+            var existingProduct = await _productService.Get(updatedProduct.Id);
+            existingProduct.title = updatedProduct.title;
+            existingProduct.description = updatedProduct.description;
+            existingProduct.isNew = updatedProduct.isNew;
+            existingProduct.price = updatedProduct.price;
+            existingProduct.salePrice  = updatedProduct.salePrice;
+            if (file0 != null)
             {
-                await file0.CopyToAsync(memoryStream);
-                updatedProduct.img = memoryStream.ToArray();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file0.CopyToAsync(memoryStream);
+                    existingProduct.img = memoryStream.ToArray();
+                }
             }
-            using (var memoryStream = new MemoryStream())
+            if (file1 != null)
             {
-                await file1.CopyToAsync(memoryStream);
-                updatedProduct.img2 = memoryStream.ToArray();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file1.CopyToAsync(memoryStream);
+                    existingProduct.img2 = memoryStream.ToArray();
+                }
             }
-            return Ok(await _productService.UpdateProduct(updatedProduct));
+            return Ok(await _productService.UpdateProduct(existingProduct));
         }
         [HttpDelete]
         [Route("deleteProduct/{id}")]
