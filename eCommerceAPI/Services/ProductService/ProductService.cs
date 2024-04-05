@@ -69,8 +69,12 @@ namespace eCommerceAPI.Services.ProductService
             return newProduct;
 
         }
-        public async Task<Product> UpdateProduct(Product updatedProduct)
+        public async Task<Product> UpdateProduct(Product updatedProduct, int[]? selectedCategoryIds)
         {
+            var selectedCategories = _context.Categories
+                .Where(c => selectedCategoryIds.Contains(c.Id))
+                .ToList();
+            updatedProduct.Categories = selectedCategories;
             _context.Update(updatedProduct);
             await _context.SaveChangesAsync();
             return updatedProduct;

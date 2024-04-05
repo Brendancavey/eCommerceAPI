@@ -12,7 +12,7 @@ namespace eCommerceAPI.Services.ProductService
         public IEnumerable<Product> GetProductsPriceSorted(IEnumerable<Product> products, string sortOrder);
         public Task<Product> Get(int id);
         public Task<Product> AddProduct(Product newProduct, int[]? selectedCategoryIds);
-        public Task<Product> UpdateProduct(Product updatedProduct);
+        public Task<Product> UpdateProduct(Product updatedProduct, int[]? selectedCategoryIds);
         public Task<Product> DeleteProduct(int id);
     }
 }

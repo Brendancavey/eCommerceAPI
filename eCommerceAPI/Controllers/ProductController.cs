@@ -93,14 +93,15 @@ namespace eCommerceAPI.Controllers
         }
         [HttpPut]
         [Route("updateProduct")]
-        public async Task<IActionResult> UpdateProduct([FromForm] Product updatedProduct, IFormFile file0 = null, IFormFile file1 = null) 
+        public async Task<IActionResult> UpdateProduct([FromForm] ProductViewModel productModel, IFormFile file0 = null, IFormFile file1 = null) 
         {
-            var existingProduct = await _productService.Get(updatedProduct.Id);
-            existingProduct.title = updatedProduct.title;
-            existingProduct.description = updatedProduct.description;
-            existingProduct.isNew = updatedProduct.isNew;
-            existingProduct.price = updatedProduct.price;
-            existingProduct.salePrice  = updatedProduct.salePrice;
+            var existingProduct = await _productService.Get(productModel.id);
+            existingProduct.title = productModel.title;
+            existingProduct.description = productModel.description;
+            existingProduct.isNew = productModel.isNew;
+            existingProduct.price = productModel.price;
+            existingProduct.salePrice  = productModel.salePrice;
+
             if (file0 != null)
             {
                 using (var memoryStream = new MemoryStream())
@@ -117,7 +118,7 @@ namespace eCommerceAPI.Controllers
                     existingProduct.img2 = memoryStream.ToArray();
                 }
             }
-            return Ok(await _productService.UpdateProduct(existingProduct));
+            return Ok(await _productService.UpdateProduct(existingProduct, productModel.SelectedCategoryIds));
         }
         [HttpDelete]
         [Route("deleteProduct/{id}")]
