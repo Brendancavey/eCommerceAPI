@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eCommerceAPI.DBContext;
 
@@ -11,9 +12,11 @@ using eCommerceAPI.DBContext;
 namespace eCommerceAPI.Migrations
 {
     [DbContext(typeof(EcommerceDBContext))]
-    partial class ProductListDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240408224556_add-identity")]
+    partial class addidentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
