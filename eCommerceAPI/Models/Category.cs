@@ -10,5 +10,10 @@ namespace eCommerceAPI.Models
         //navigation properties
         public ICollection<Product>? Products { get; set; }
 
+        public Category() 
+        {
+            Products = new List<Product>();
+        }
+
     }
 }

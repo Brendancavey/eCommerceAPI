@@ -101,7 +101,6 @@ namespace eCommerceAPI.Controllers
             existingProduct.isNew = productModel.isNew;
             existingProduct.price = productModel.price;
             existingProduct.salePrice  = productModel.salePrice;
-
             if (file0 != null)
             {
                 using (var memoryStream = new MemoryStream())

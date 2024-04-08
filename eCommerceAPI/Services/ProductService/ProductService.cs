@@ -63,21 +63,38 @@ namespace eCommerceAPI.Services.ProductService
             var selectedCategories = _context.Categories
                 .Where(c => selectedCategoryIds.Contains(c.Id))
                 .ToList();
-            newProduct.Categories = selectedCategories;
-            _context.Add(newProduct);
+            foreach(var category in selectedCategories)
+            {
+                newProduct.Categories.Add(category);
+            }
+            _context.Products.Add(newProduct);
             await _context.SaveChangesAsync();
             return newProduct;
 
         }
         public async Task<Product> UpdateProduct(Product updatedProduct, int[]? selectedCategoryIds)
         {
+            var product = await _context.Products
+                .Include(p => p.Categories)
+                .FirstOrDefaultAsync(p => p.Id == updatedProduct.Id);
+
             var selectedCategories = _context.Categories
                 .Where(c => selectedCategoryIds.Contains(c.Id))
                 .ToList();
-            updatedProduct.Categories = selectedCategories;
-            _context.Update(updatedProduct);
+
+            //clear existing categories
+            product.Categories.Clear();
+
+            //add the newly selected categories
+            foreach(var category in selectedCategories)
+            {
+                product.Categories.Add(category);
+            }
+            
+            _context.Update(product);
             await _context.SaveChangesAsync();
-            return updatedProduct;
+           
+            return product;
 
         }
         public async Task<Product> DeleteProduct(int id)
