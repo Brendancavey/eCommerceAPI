@@ -1,9 +1,7 @@
 using eCommerceAPI.DBContext;
 using eCommerceAPI.Services.ProductService;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 public class Program
 {
@@ -24,8 +22,8 @@ public class Program
         });
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
-        builder.Services.AddIdentityApiEndpoints<IdentityUser>
-            (options => options.SignIn.RequireConfirmedAccount = false)
+        builder.Services.AddDefaultIdentity<IdentityUser>
+            (options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<EcommerceDBContext>();
         builder.Services.AddDbContext<DbContext, EcommerceDBContext>(options =>
@@ -46,19 +44,6 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-        app.MapIdentityApi<IdentityUser>();
-
-        app.MapPost("/logout", async (SignInManager<IdentityUser> signInManager) =>
-        {
-            await signInManager.SignOutAsync();
-            return Results.Ok();
-        }).RequireAuthorization();
-
-        app.MapGet("/pingauth", (ClaimsPrincipal user) =>
-        {
-            var email = user.FindFirstValue(ClaimTypes.Email); //get the user's email from the claim
-            return Results.Json(new { Email = email }); // return the email as a plain text response
-        }).RequireAuthorization();
 
         app.UseHttpsRedirection();
 
