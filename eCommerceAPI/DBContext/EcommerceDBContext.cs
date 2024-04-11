@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eCommerceAPI.DBContext
 {
-    public class EcommerceDBContext: IdentityDbContext
+    public class EcommerceDBContext: IdentityDbContext<ApplicationUser>
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
