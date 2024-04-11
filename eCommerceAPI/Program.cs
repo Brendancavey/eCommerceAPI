@@ -1,7 +1,10 @@
 using eCommerceAPI.DBContext;
+using eCommerceAPI.Models;
 using eCommerceAPI.Services.ProductService;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 public class Program
 {
@@ -18,14 +21,16 @@ public class Program
         //Enable CORS
         builder.Services.AddCors(c =>
         {
-            c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            c.AddPolicy("AllowOrigin", options => {
+                options.WithOrigins("http://localhost:5173")
+                    .AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+            });
         });
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
-        builder.Services.AddDefaultIdentity<IdentityUser>
-            (options => options.SignIn.RequireConfirmedAccount = true)
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<EcommerceDBContext>();
+
+        builder.Services.AddAuthorization();
+
         builder.Services.AddDbContext<DbContext, EcommerceDBContext>(options =>
         {
             options.UseSqlServer(
@@ -34,22 +39,44 @@ public class Program
                 "Trusted_Connection=True;" +
                 "TrustServerCertificate=True;");
         });
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie();
+        builder.Services.AddIdentityApiEndpoints<ApplicationUser>
+            (options => {
+                options.SignIn.RequireConfirmedAccount = false;
+     
+            })
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<EcommerceDBContext>();
 
         var app = builder.Build();
         //Enable Cors
-        app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        app.UseCors("AllowOrigin");
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
-
-        app.UseHttpsRedirection();
-
         app.UseAuthentication();
 
         app.UseAuthorization();
+
+        app.MapIdentityApi<ApplicationUser>();
+        app.MapPost("/logout", async (SignInManager<ApplicationUser> signInManager) =>
+        {
+            await signInManager.SignOutAsync();
+            return Results.Ok();
+        }).RequireAuthorization();
+
+        app.MapGet("/pingauth", (ClaimsPrincipal user) =>
+        {
+            var email = user.FindFirstValue(ClaimTypes.Email); //get the user's email from the claim
+            var role = user.FindFirstValue(ClaimTypes.Role);
+            return Results.Json(new { Email = email, Role = role }); // return the email as a plain text response
+        }).RequireAuthorization();
+
+        app.UseHttpsRedirection();
 
         app.MapControllers();
 
@@ -70,14 +97,14 @@ public class Program
         //seeding default admin account data
         using (var scope = app.Services.CreateScope())
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             string email = "admin@admin.com";
             string password = "Test1234!";
-            
-            if(await userManager.FindByEmailAsync(email) == null)
+
+            if (await userManager.FindByEmailAsync(email) == null)
             {
-                var user = new IdentityUser();
+                var user = new ApplicationUser();
                 user.UserName = email;
                 user.Email = email;
                 user.EmailConfirmed = true;

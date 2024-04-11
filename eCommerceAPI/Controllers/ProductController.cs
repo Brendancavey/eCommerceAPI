@@ -1,6 +1,7 @@
 ﻿using eCommerceAPI.DBContext;
 using eCommerceAPI.Models;
 using eCommerceAPI.Services.ProductService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -61,6 +62,7 @@ namespace eCommerceAPI.Controllers
             byte[] imgData = product.img2;
             return File(imgData, "image/jpg");
         }
+        [Authorize (Roles = "Admin")]
         [HttpPost]
         [Route("addProduct")]
         public async Task<IActionResult> AddProduct([FromForm] ProductViewModel productModel, IFormFile file0, IFormFile file1 = null)
