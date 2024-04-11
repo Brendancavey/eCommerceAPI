@@ -93,6 +93,7 @@ namespace eCommerceAPI.Controllers
             }
             return Ok(await _productService.AddProduct(newProduct, productModel.SelectedCategoryIds));
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("updateProduct")]
         public async Task<IActionResult> UpdateProduct([FromForm] ProductViewModel productModel, IFormFile file0 = null, IFormFile file1 = null) 
@@ -121,6 +122,7 @@ namespace eCommerceAPI.Controllers
             }
             return Ok(await _productService.UpdateProduct(existingProduct, productModel.SelectedCategoryIds));
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("deleteProduct/{id}")]
         public async Task<IActionResult> DeleteProduct(int id)

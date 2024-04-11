@@ -39,12 +39,10 @@ public class Program
                 "Trusted_Connection=True;" +
                 "TrustServerCertificate=True;");
         });
-        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie();
+        
         builder.Services.AddIdentityApiEndpoints<ApplicationUser>
             (options => {
-                options.SignIn.RequireConfirmedAccount = false;
-     
+                options.SignIn.RequireConfirmedAccount = false;     
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<EcommerceDBContext>();

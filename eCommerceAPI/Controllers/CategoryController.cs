@@ -1,5 +1,6 @@
 ﻿using eCommerceAPI.Models;
 using eCommerceAPI.Services.ProductService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -32,18 +33,21 @@ namespace eCommerceAPI.Controllers
         {
             return Ok(await _categoryService.Get(id));
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("addCategory")]
         public async Task<IActionResult> AddCategory([FromForm] Category newCategory)
         {
             return Ok(await _categoryService.AddCategory(newCategory));
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("updateCategory")]
         public async Task<IActionResult> UpdateCategory([FromForm] Category updatedCategory) 
         {
             return Ok(await _categoryService.UpdateCategory(updatedCategory));
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("deleteCategory/{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
