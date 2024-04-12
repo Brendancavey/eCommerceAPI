@@ -1,7 +1,6 @@
 using eCommerceAPI.DBContext;
 using eCommerceAPI.Models;
 using eCommerceAPI.Services.ProductService;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -42,11 +41,11 @@ public class Program
         
         builder.Services.AddIdentityApiEndpoints<ApplicationUser>
             (options => {
-                options.SignIn.RequireConfirmedAccount = false;     
+                options.SignIn.RequireConfirmedAccount = false;
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<EcommerceDBContext>();
-
+        
         var app = builder.Build();
         //Enable Cors
         app.UseCors("AllowOrigin");
@@ -71,7 +70,20 @@ public class Program
         {
             var email = user.FindFirstValue(ClaimTypes.Email); //get the user's email from the claim
             var role = user.FindFirstValue(ClaimTypes.Role);
-            return Results.Json(new { Email = email, Role = role }); // return the email as a plain text response
+            var firstName = user.FindFirstValue("FirstName");
+            var lastName = user.FindFirstValue("LastName");
+            var address = user.FindFirstValue("Address");
+            var city = user.FindFirstValue("City");
+            var zipCode = user.FindFirstValue("ZipCode");
+            return Results.Json(new { 
+                Email = email, 
+                Role = role, 
+                FirstName = firstName,
+                LastName = lastName,
+                Address = address,
+                City = city,
+                ZipCode = zipCode,
+            }); // return as a plain text response
         }).RequireAuthorization();
 
         app.UseHttpsRedirection();
