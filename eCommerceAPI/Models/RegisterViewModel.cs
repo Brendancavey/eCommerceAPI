@@ -12,6 +12,5 @@ namespace eCommerceAPI.Models
         public string City { get; set; }
         public string ZipCode { get; set; }
         
-        List<Product>? Cart { get; set; }
     }
 }

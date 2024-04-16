@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eCommerceAPI.DBContext;
 
@@ -11,9 +12,11 @@ using eCommerceAPI.DBContext;
 namespace eCommerceAPI.Migrations
 {
     [DbContext(typeof(EcommerceDBContext))]
-    partial class ProductListDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240415185310_add-cart")]
+    partial class addcart
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace eCommerceAPI.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CartProduct", (string)null);
+                    b.ToTable("CartProduct");
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -49,7 +52,7 @@ namespace eCommerceAPI.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("CategoryProduct", (string)null);
+                    b.ToTable("CategoryProduct");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -282,7 +285,7 @@ namespace eCommerceAPI.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("eCommerceAPI.Models.Category", b =>
@@ -299,7 +302,7 @@ namespace eCommerceAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("eCommerceAPI.Models.Product", b =>
@@ -335,7 +338,7 @@ namespace eCommerceAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("CartProduct", b =>

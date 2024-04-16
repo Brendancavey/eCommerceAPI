@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eCommerceAPI.Models
 {
@@ -18,7 +19,9 @@ namespace eCommerceAPI.Models
 
         [PersonalData]
         public string? ZipCode { get; set; }
-        
-        List<Product> Cart { get; set; }
+
+
+        //navigation property
+        public Cart Cart { get; set; }
     }
 }
