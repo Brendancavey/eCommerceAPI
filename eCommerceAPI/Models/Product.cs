@@ -16,8 +16,8 @@ namespace eCommerceAPI.Models
 
         //navigation properties
         public ICollection<Category>? Categories { get; set; }
-        public ICollection<Cart>? Carts { get; set; }
-
+        public ICollection<Cart> Carts { get; set; } = [];
+        public ICollection<CartProduct> CartProducts { get; set; } = [];
         public Product()
         {
             Categories = new List<Category>();

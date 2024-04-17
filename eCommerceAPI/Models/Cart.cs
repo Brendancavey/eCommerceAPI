@@ -11,6 +11,7 @@ namespace eCommerceAPI.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
-        public ICollection<Product>? Products { get; set; }
+        public ICollection<Product> Products { get; set; } = [];
+        public ICollection<CartProduct> CartProducts { get; set; } = [];
     }
 }

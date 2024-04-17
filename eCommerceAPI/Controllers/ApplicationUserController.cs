@@ -93,7 +93,7 @@ namespace eCommerceAPI.Controllers
         }
         [HttpPut]
         [Route("updatecart")]
-        public async Task<IActionResult> UpdateCart([FromForm] List<int> productIds)
+        public async Task<IActionResult> UpdateCart([FromForm] Dictionary<string, int> productIds) //key value pair [productId: quantityOfProduct]
         {
             try
             {
@@ -101,6 +101,7 @@ namespace eCommerceAPI.Controllers
 
                 var existingCart = await _context.Carts
                     .Include(c => c.Products)
+                    .Include(c => c.CartProducts)
                     .SingleOrDefaultAsync(c => c.UserId == userId);
 
                 if (existingCart != null)
@@ -109,11 +110,20 @@ namespace eCommerceAPI.Controllers
                     existingCart.Products.Clear();
 
                     //add new items to cart
-                    foreach (var id in productIds)
+                    foreach (var stringId in productIds.Keys)
                     {
+                        int id = Int32.Parse(stringId);
+
+                        //add item to cart first
                         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
                         existingCart.Products.Add(product);
-                    }
+                        _context.Carts.Update(existingCart);
+                        await _context.SaveChangesAsync();
+
+                        //then update quantity to avoid null object reference
+                        var entry = existingCart.CartProducts.FirstOrDefault(cp => cp.ProductId == id);
+                        entry.Quantity = productIds[stringId];
+                    }   
                 }
                 _context.Carts.Update(existingCart);
                 await _context.SaveChangesAsync();
