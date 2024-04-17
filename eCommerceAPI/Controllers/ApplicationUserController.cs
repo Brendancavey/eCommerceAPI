@@ -77,18 +77,22 @@ namespace eCommerceAPI.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userCart = await _context.Carts
                 .Include(c => c.Products)
+                .Include(c => c.CartProducts)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
             var listOfProducts = await _context.Products
                 .Where(product => userCart.Products.Contains(product)).ToListAsync();
 
-            List<int> listOfProductIds = new List<int>();
+            Dictionary<int, int> mapOfProductIds = new Dictionary<int, int>(); //key value pair of [productId : productQuantity]
 
+            //convert to map of [id : quantity] because product objects too large for browser cache
             foreach(var product in listOfProducts)
             {
-                listOfProductIds.Add(product.Id);
+                var entry = userCart.CartProducts.FirstOrDefault(cp => cp.ProductId == product.Id);
+                mapOfProductIds[product.Id] = entry.Quantity;
+
             }
-            return Ok(listOfProductIds);
+            return Ok(mapOfProductIds);
             
         }
         [HttpPut]
