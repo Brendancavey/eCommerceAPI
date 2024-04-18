@@ -1,5 +1,7 @@
 using eCommerceAPI.DBContext;
 using eCommerceAPI.Models;
+using eCommerceAPI.Services.ApplicationUserService;
+using eCommerceAPI.Services.CartService;
 using eCommerceAPI.Services.ProductService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +29,8 @@ public class Program
         });
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddScoped<ICartService, CartService>();
+        builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 
         builder.Services.AddAuthorization();
 
