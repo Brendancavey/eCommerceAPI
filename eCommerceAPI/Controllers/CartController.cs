@@ -25,6 +25,7 @@ namespace eCommerceAPI.Controllers
             return Ok(await _cartService.GetCart(userId));
 
         }
+        [Authorize]
         [HttpPut]
         [Route("updatecart")]
         public async Task<IActionResult> UpdateCart([FromForm] Dictionary<string, int> productIdsMap) //key value pair [productId: quantityOfProduct]
