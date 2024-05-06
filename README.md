@@ -7,10 +7,10 @@ of products, categories, and user account information, and also features specifi
 authentication for specific endpoints such as creating, updating, and deleting products and is reserved for administrative roles.
 
 <h2>Technical Description</h2>
-This web api is built using the ASP.NET Web API framework and C#. It leverages ASP.NET Core's Entity framework to establish an Object Relational Mapper (ORM) for seamless connectivity with a local 
+This web API is built using the ASP.NET Web API framework and C#. It leverages ASP.NET Core's Entity framework to establish an Object Relational Mapper (ORM) for seamless connectivity with a local 
 SQL Server, and utilizes ASP.NET Core's Identity framework to establish authentication and authorization on specific endpoints. The SQL Server is managed and debugged using SQL Server Management Studio 
 (SSMS). LINQ was used to query data and perform filtering and sorting for specific endpoints, and Fluent API was utilized to establish entity relationships such as one to many, and many to many for
-database normalization. The application's archtecture was built following SOLID design principles and the repository design pattern for scalability and maintainability.
+database normalization. The application's architecture was built following SOLID design principles and the repository design pattern for scalability and maintainability.
 
 <h2>Technologies Used</h2>
 <ul>
